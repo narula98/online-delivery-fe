@@ -1,0 +1,6 @@
+@import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
+@import "primevue/resources/primevue.min.css";
+
+.navbar-color{
+    background-color: #563d7c;
+}
