@@ -1,6 +1,12 @@
 @import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 @import "primevue/resources/primevue.min.css";
+@import "primeicons/primeicons.css";
+
 
 .navbar-color{
-    background-color: #563d7c;
+    background-color: #25005e;
+}
+
+.shadow-class{
+    box-shadow: 1px 0 0 2px #8670a8a8;
 }

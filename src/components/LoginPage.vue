@@ -1,13 +1,9 @@
 <template>
 <div class=" d-flex justify-content-center mt-4">
-
   <div class="card">
-      <span class="text-danger mt-2" v-if="invalidCredentials"
-            >Invalid Details Plz try again</span
-          >
-          <span class="text-danger mt-2" v-if="invalidSignUp"
-            >Please use other email id</span
-          >
+   <Message v-if="showSignInSuccessful" :severity="'success'">SignIn Successful</Message>
+   <Message v-if="invalidCredentials" :severity="'error'">Invalid Details Plz try again</Message>
+   <Message v-if="invalidSignUp" :severity="'error'">Please use other email id</Message>
     <tab-view class="p-5">
         
       <tab-panel header="login" style="line-height: 2 !important">
@@ -28,7 +24,8 @@
             class="form-control mt-2"
             v-model="loginPassword"
           />
-          <button class="btn btn-primary mt-1" @click="login()">Login</button>
+          <button v-if="!showLoginSpinner" class="btn btn-primary mt-1" @click="login()">Login</button>
+          <progress-spinner v-else style="width: 50px; height: 50px" strokeWidth="8" />
         </div>
       </tab-panel>
       <tab-panel header="signup">
@@ -63,7 +60,8 @@
           <span class="text-danger" v-if="invalidSigninAdd"
             >Invalid Address</span
           >
-          <button class="btn btn-primary mt-1" @click="signin">Sign Up</button>
+          <button v-if="!showSigninSpinner" class="btn btn-primary mt-1" @click="signin">Sign Up</button>
+           <progress-spinner v-else style="width: 50px; height: 50px" strokeWidth="8" />
         </div>
       </tab-panel>
     </tab-view>
@@ -76,10 +74,15 @@ import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
 import Services from '../services/services';
 import Store from '../store/store';
+import ProgressSpinner from 'primevue/progressspinner';
+import Message from 'primevue/message';
+
 export default {
   components: {
     'tab-view': TabView,
     'tab-panel': TabPanel,
+    'progress-spinner': ProgressSpinner,
+    Message
   },
   data() {
     return {
@@ -94,6 +97,9 @@ export default {
       invalidSigninAdd: false,
       invalidCredentials: false,
       invalidSignUp: false,
+      showLoginSpinner: false,
+      showSigninSpinner: false,
+      showSignInSuccessful: false
     };
   },
   methods: {
@@ -102,12 +108,15 @@ export default {
       this.checkEmailValidation(this.loginEmail, 'login');
       if(!this.invalidLoginEmail){
         try{
+          this.showLoginSpinner = true;
           const resp = await Services.login(this.loginEmail,this.loginPassword);
           Store.setEmail(resp.email);
           this.$router.push('/home');
         } catch{
           this.invalidCredentials = true;
           console.log(this.invalidCredentials);
+        } finally {
+          this.showLoginSpinner = false;
         }
       }
     },
@@ -118,12 +127,20 @@ export default {
       this.checkAddressVerification(this.signinAddress);
       if(!this.invalidLoginEmail && !this.invalidSigninPassword && !this.invalidSigninAdd){
         try{
+          this.showSigninSpinner = true;
           console.log('email:',this.signInEmail,'pwd',this.signinPassword,'add', this.signinAddress);
           const resp = await Services.signin(this.signInEmail,this.signinPassword, this.signinAddress);
+          this.showSignInSuccessful = true;
+          this.signInEmail = '';
+          this.signinPassword = '';
+          this.signinAddress = '';
           console.log(resp);
         } catch{
           this.invalidSignUp = true;
+          this.showSignInSuccessful = false;
           console.log(this.invalidCredentials);
+        } finally {
+          this.showSigninSpinner = false;
         }
       }
     },

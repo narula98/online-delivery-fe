@@ -53,4 +53,20 @@ export default class Services {
     });
   }
 
+  static getStoreItems(storeId){
+    const fetchOptions = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    return fetch(`http://localhost:8080/items/getStoreItems?storeId=${storeId}`, fetchOptions).then((response) => {
+      if(!response.ok){
+        console.log('resp is:',response.status);
+        throw new Error(response.status);
+      }  
+      return response.json();
+    });
+  }
+
 }

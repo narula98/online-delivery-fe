@@ -4,7 +4,7 @@
       <div class="card-body">
         <h5 class="card-title">{{ store.name }}</h5>
         <p class="card-text">Located in {{ store.area }}</p>
-        <button class="btn btn-primary">Go somewhere</button>
+        <button class="btn btn-primary" @click="navigateToItems(store.storeId)">Check Store</button>
       </div>
     </div>
   </div>
@@ -49,6 +49,11 @@ export default {
         this.showSpinner = false;
       }
     },
+    navigateToItems(storeId){
+      console.log(storeId);
+      Store.setStoreId(storeId);
+      this.$router.push('/items');
+    }
   },
 };
 </script>
