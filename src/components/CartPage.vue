@@ -23,12 +23,12 @@
             </div>
 
             <div class="p-1">
-              <h6 class="label">Item Name:</h6>
+              <h6 class="label">Store Name:</h6>
               {{ item.storeName }}
             </div>
 
             <div class="p-1">
-              <h6 class="label">Item Name:</h6>
+              <h6 class="label">Quantity:</h6>
               {{ item.quantity }}
             </div>
           </div>
