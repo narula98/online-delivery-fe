@@ -1,5 +1,15 @@
 <template>
   <div v-if="!showSpinner" class="mt-5">
+    <nav class="navbar">
+      <span
+        class="nav-item pi pi-arrow-right float-right"
+        @click="navigateToCart()"
+        style="cursor: pointer; font-weight: bold"
+      >
+        Go to cart
+      </span>
+    </nav>
+    <h2 class="text-center">Available Stores:</h2>
     <div class="d-flex flex-row card" v-for="(store, i) in stores" :key="i">
       <div class="card-body">
         <h5 class="card-title">{{ store.name }}</h5>
@@ -53,6 +63,9 @@ export default {
       console.log(storeId);
       Store.setStoreId(storeId);
       this.$router.push('/items');
+    },
+    navigateToCart(){
+      this.$router.push('/cart');
     }
   },
 };

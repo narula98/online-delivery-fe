@@ -12,7 +12,8 @@
         Back To Store
       </span>
     </nav>
-    <div class="d-flex justify-content-center"></div>
+    <Message class="mt-3" v-if="addedToCart" :severity="'success'" @close="closeMessage">Added to cart</Message>
+    <h2 class="text-center">Items in Store:</h2>
     <div
       class="col-3 offset-1 p-2 mt-5 shadow-class"
       v-for="(item, i) in items"
@@ -50,9 +51,12 @@
 import Store from '../store/store';
 import Services from '../services/services';
 import ProgressSpinner from 'primevue/progressspinner';
+import Message from 'primevue/message';
+
 export default {
   components: {
     'progress-spinner': ProgressSpinner,
+    Message
   },
   async created() {
     if (Store.state.customerEmail !== '' && Store.state.storeId !== '') {
@@ -66,7 +70,10 @@ export default {
       items: [],
       serviceError: false,
       showSpinner: false,
-      itemQuantity:0
+      itemQuantity:0,
+      cartError: false,
+      cartSpinner: false,
+      addedToCart: false
     };
   },
   methods: {
@@ -85,10 +92,22 @@ export default {
       this.$router.push('/home');
       Store.setStoreId('');
     },
-    addToCart(quantity,storeId){
-      console.log(quantity,' ',storeId);
+    async addToCart(quantity,itemId){
+      console.log(quantity,' ',itemId);
+      try {
+        this.cartSpinner = true;
+        const resp = await Services.addToCart(Store.state.customerEmail, Store.state.storeId, itemId, quantity);
+        this.addedToCart = true;
+        console.log(resp);
+      }
+      catch{
+        this.cartError = true;
+      }
     }
   },
+  closeMessage(e){
+    console.log('yoooo',e);
+  }
 };
 </script>
 

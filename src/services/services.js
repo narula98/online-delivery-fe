@@ -69,4 +69,43 @@ export default class Services {
     });
   }
 
+  static addToCart(customerEmail,storeId,itemId,quantity){
+    const cartDetails = {
+      'userEmail': customerEmail,
+      'storeId': storeId,
+      'itemID': itemId,
+      'quantity': quantity
+    };
+    const fetchOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(cartDetails)
+    };
+    return fetch('http://localhost:8080/cart/addtoCart', fetchOptions).then((response) => {
+      if(!response.ok){
+        console.log('resp is:',response.status);
+        throw new Error(response.status);
+      }  
+      return response.json();
+    });
+  }
+
+  static getUserCart(customerEmail){
+    const fetchOptions = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    return fetch(`http://localhost:8080/users/userCart?email=${customerEmail}`, fetchOptions).then((response) => {
+      if(!response.ok){
+        console.log('resp is:',response.status);
+        throw new Error(response.status);
+      }  
+      return response.json();
+    });
+  }
+
 }
